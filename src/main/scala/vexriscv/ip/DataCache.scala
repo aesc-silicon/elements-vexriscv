@@ -299,7 +299,8 @@ case class DataCacheMemBus(p : DataCacheConfig) extends Bundle with IMasterSlave
     axi.sharedCmd.write := cmdStage.wr
     axi.sharedCmd.prot := "010"
     axi.sharedCmd.cache := "1111"
-    axi.sharedCmd.size := log2Up(p.memDataBytes)
+    axi.sharedCmd.size :=
+      cmdStage.uncached ? cmdStage.size.resized | U(log2Up(p.memDataBytes), axi.sharedCmd.size.getWidth bits)
     axi.sharedCmd.addr := cmdStage.address
     axi.sharedCmd.len  := cmdStage.beatCountMinusOne.resized
 
